@@ -19,7 +19,8 @@ public class PaywallerPaywallPaymentSheetController : UIViewController{
     let tagLabel = NeonPaddingLabel()
     let durationLabel = UILabel()
     let totalPriceLabel = UILabel()
-    var trialDuration : Int?
+    var trialDuration : Int?  
+    var trialPrice : String?
     let legalView = NeonLegalView()
     var paywallManager = PaywallerPaywallManager()
     public override func viewDidLoad() {
@@ -58,12 +59,17 @@ public class PaywallerPaywallPaymentSheetController : UIViewController{
         }
       
         var lastViewFromTrialLine : UIView?
-        if let trialDuration{
-            lastViewFromTrialLine = addTrialLine(previousView: getPremiumLabel, trialDuration: trialDuration)
-            continueButton.setTitle("Start my \(trialDuration)-day free trial", for: .normal)
+        
+        if let trialDuration, trialDuration != 0{
+            if let trialPrice{
+                continueButton.setTitle("Subscribe for \(trialPrice) for first \(trialDuration) days", for: .normal)
+            }else{
+                continueButton.setTitle("Start my \(trialDuration)-day free trial", for: .normal)
+            }
         }else{
-            continueButton.setTitle("Confirm", for: .normal)
+            continueButton.setTitle("Continue", for: .normal)
         }
+        
         
         let lastViewFromCostLine = addUnitCostLine(previousView: lastViewFromTrialLine ?? getPremiumLabel)
         let lastViewFromTotalLine = addTotalLine(previousView: lastViewFromCostLine)
@@ -322,8 +328,12 @@ public class PaywallerPaywallPaymentSheetController : UIViewController{
             planManager.calculateSaveLabel(saveLabel: saveLabel)
             planManager.calculateTagLabel(tagLabel: tagLabel)
             totalPriceLabel.text = planManager.getDefaultPrice(product: product)
-            trialDuration = planManager.getTrialDuration(product: product)
             
+            planManager.getIntroductoryPeriod(product: product, completion: { duration, price in
+                trialDuration = duration
+                trialPrice = price
+            })
+                        
         }else{
             // Couldn't fetch product
         }

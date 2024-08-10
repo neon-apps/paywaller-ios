@@ -174,26 +174,36 @@ class PaywallerPaywallPlanManager {
     }
     
     
-    func getTrialDuration(product : SKProduct) -> Int?{
+    func getIntroductoryPeriod(product : SKProduct, completion : (_ duration: Int?, _ price: String?) -> ()){
         
         if let numberOfUnits = product.introductoryPrice?.subscriptionPeriod.numberOfUnits,
            let unit = product.introductoryPrice?.subscriptionPeriod.unit{
             
+            var introductoryPrice : String?
+            
+            if let price = product.introductoryPrice?.price{
+                if price != 0.0{
+                    let currencyCode = product.priceLocale.currencyCode
+                    let currencySymbol = NeonCurrencyManager.getCurrencySymbol(for: currencyCode ?? "USD") ?? "$"
+                    introductoryPrice = formatPrice(price: price)
+                }
+            }
+  
             switch unit {
             case .day:
-                return numberOfUnits
+                completion(numberOfUnits, introductoryPrice)
             case .week:
-                return numberOfUnits * 7
+                completion (numberOfUnits * 7, introductoryPrice)
             case .month:
-                return numberOfUnits * 30
+                completion (numberOfUnits * 30, introductoryPrice)
             case .year:
-                return numberOfUnits * 365
+                completion (numberOfUnits * 365, introductoryPrice)
             default :
-                return nil
+                completion (nil,nil)
             }
             
         }else{
-            return nil
+            completion (nil,nil)
         }
         
     }
@@ -317,11 +327,19 @@ class PaywallerPaywallPlanManager {
         guard let plan else { return }
         
         if let currentProduct = fetchProduct(for: plan){
-            if let freeTrialDuration = getTrialDuration(product: currentProduct){
-                tagLabel.text = plan.tag?.replacingOccurrences(of: "free_trial_duration", with: "\(freeTrialDuration)") ?? "\(freeTrialDuration)-DAY FREE"
-            }else{
-                tagLabel.text = plan.tag ?? " "
-            }
+            
+            getIntroductoryPeriod(product: currentProduct, completion: { duration, price in
+                if let duration, duration != 0{
+                    if let price{
+                        tagLabel.text = plan.tag?.replacingOccurrences(of: "free_trial_duration", with: "\(duration)") ?? "\(price) FOR \(duration)-DAYS"
+                    }else{
+                        tagLabel.text = plan.tag?.replacingOccurrences(of: "free_trial_duration", with: "\(duration)") ?? "\(duration)-DAY FREE"
+                    }
+                }else{
+                    tagLabel.text = plan.tag ?? " "
+
+                }
+            })
         }
         
         

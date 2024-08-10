@@ -255,11 +255,20 @@ public class PaywallerPaywallController : UIViewController{
     }
     func fetchSelectedPlanDetails(){
         if let product = planManager.fetchProduct(for: paywallManager.constants.selectedPlan){
-            if let  trialDuration = planManager.getTrialDuration(product: product), trialDuration != 0{
-                continueButton.setTitle("Start my \(trialDuration)-day free trial", for: .normal)
-            }else{
-                continueButton.setTitle("Continue", for: .normal)
-            }
+            
+            planManager.getIntroductoryPeriod(product: product, completion: { duration, price in
+                if let duration, duration != 0{
+                    if let price{
+                        continueButton.setTitle("Subscribe for \(price) for first \(duration) days", for: .normal)
+                    }else{
+                        continueButton.setTitle("Start my \(duration)-day free trial", for: .normal)
+                    }
+                }else{
+                    continueButton.setTitle("Continue", for: .normal)
+                }
+            })
+            
+
             
         }
       
