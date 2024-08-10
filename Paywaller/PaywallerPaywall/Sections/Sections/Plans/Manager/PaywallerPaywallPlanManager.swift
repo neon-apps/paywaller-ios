@@ -185,7 +185,7 @@ class PaywallerPaywallPlanManager {
                 if price != 0.0{
                     let currencyCode = product.priceLocale.currencyCode
                     let currencySymbol = NeonCurrencyManager.getCurrencySymbol(for: currencyCode ?? "USD") ?? "$"
-                    introductoryPrice = formatPrice(price: price)
+                    introductoryPrice = "\(currencySymbol)\(formatPrice(price: price))"
                 }
             }
   
