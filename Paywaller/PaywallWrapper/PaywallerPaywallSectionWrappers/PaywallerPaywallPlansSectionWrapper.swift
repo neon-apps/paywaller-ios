@@ -21,6 +21,7 @@ extension PaywallerPaywallJSONWrapper {
             for itemData in itemsData {
                 
                 let tag = itemData["tag"] as? String
+                let ctaTextWhenSelected = itemData["ctaTextWhenSelected"] as? String
                 let title = itemData["title"] as? String
                 
                 if let productIdentifier = itemData["productIdentifier"] as? String,
@@ -28,7 +29,7 @@ extension PaywallerPaywallJSONWrapper {
                    let priceType = priceTypeFromString(priceTypeRaw),
                    let isDefaultSelected = itemData["isDefaultSelected"] as? Bool {
                     
-                    let plan = PaywallerPaywallPlan(productIdentifier: productIdentifier, tag: tag == "" ? nil : tag, title : title == "" ? nil : title, priceType: priceType, isDefaultSelected: isDefaultSelected)
+                    let plan = PaywallerPaywallPlan(productIdentifier: productIdentifier, tag: tag == "" ? nil : tag, title : title == "" ? nil : title, priceType: priceType, isDefaultSelected: isDefaultSelected, ctaTextWhenSelected: ctaTextWhenSelected)
                     plans.append(plan)
                 }
             }
@@ -85,6 +86,7 @@ extension PaywallerPaywallJSONWrapper {
                 "isDefaultSelected": item.isDefaultSelected,
                 "priceType": priceTypeToString(item.priceType),
                 "productIdentifier": item.productIdentifier,
+                "ctaTextWhenSelected": item.ctaTextWhenSelected ?? "",
                 "tag": item.tag ?? "",
                 "title": item.title ?? ""
             ]

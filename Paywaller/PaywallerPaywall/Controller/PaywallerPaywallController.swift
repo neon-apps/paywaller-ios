@@ -256,19 +256,25 @@ public class PaywallerPaywallController : UIViewController{
     func fetchSelectedPlanDetails(){
         if let product = planManager.fetchProduct(for: paywallManager.constants.selectedPlan){
             
-            planManager.getIntroductoryPeriod(product: product, completion: { duration, price in
-                if let duration, duration != 0{
-                    if let price{
-                        continueButton.setTitle("Subscribe for \(price) for first \(duration) days", for: .normal)
+            let ctaTextWhenSelected = paywallManager.constants.selectedPlan.ctaTextWhenSelected
+            if ctaTextWhenSelected != nil && ctaTextWhenSelected != "" {
+                continueButton.setTitle(ctaTextWhenSelected ?? "", for: .normal)
+            }else{
+                
+                planManager.getIntroductoryPeriod(product: product, completion: { duration, price in
+                    if let duration, duration != 0{
+                        if let price{
+                            continueButton.setTitle("Subscribe for \(price) for first \(duration) days", for: .normal)
+                        }else{
+                            continueButton.setTitle("Start my \(duration)-day free trial", for: .normal)
+                        }
                     }else{
-                        continueButton.setTitle("Start my \(duration)-day free trial", for: .normal)
+                        continueButton.setTitle("Continue", for: .normal)
                     }
-                }else{
-                    continueButton.setTitle("Continue", for: .normal)
-                }
-            })
-            
-
+                })
+                
+                
+            }
             
         }
       
