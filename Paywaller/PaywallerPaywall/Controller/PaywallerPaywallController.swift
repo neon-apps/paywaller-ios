@@ -255,26 +255,46 @@ public class PaywallerPaywallController : UIViewController{
     }
     func fetchSelectedPlanDetails(){
         if let product = planManager.fetchProduct(for: paywallManager.constants.selectedPlan){
-            
             let ctaTextWhenSelected = paywallManager.constants.selectedPlan.ctaTextWhenSelected
-            if ctaTextWhenSelected != nil && ctaTextWhenSelected != "" {
-                continueButton.setTitle(ctaTextWhenSelected ?? "", for: .normal)
-            }else{
                 
                 planManager.getIntroductoryPeriod(product: product, completion: { duration, price in
                     if let duration, duration != 0{
                         if let price{
-                            continueButton.setTitle("Subscribe for \(price) for first \(duration) days", for: .normal)
+                            
+                            if ctaTextWhenSelected != nil && ctaTextWhenSelected != "" {
+                                var ctaText = ctaTextWhenSelected ?? ""
+                                ctaText = ctaText.replacingOccurrences(of: "{price}", with: "\(price)")
+                                ctaText = ctaText.replacingOccurrences(of: "{introductory_duration}", with: "\(duration)")
+                                continueButton.setTitle(ctaText, for: .normal)
+                            }else{
+                                continueButton.setTitle("Subscribe for \(price) for first \(duration) days", for: .normal)
+                            }
+                            
+                            
                         }else{
-                            continueButton.setTitle("Start my \(duration)-day free trial", for: .normal)
+                            
+                            if ctaTextWhenSelected != nil && ctaTextWhenSelected != "" {
+                                var ctaText = ctaTextWhenSelected ?? ""
+                                ctaText = ctaText.replacingOccurrences(of: "{introductory_duration}", with: "\(duration)")
+                                continueButton.setTitle(ctaText, for: .normal)
+                            }else{
+                                continueButton.setTitle("Start my \(duration)-day free trial", for: .normal)
+                            }
+                            
+                            
                         }
                     }else{
-                        continueButton.setTitle("Continue", for: .normal)
+                        
+                        if ctaTextWhenSelected != nil && ctaTextWhenSelected != "" {
+                            var ctaText = ctaTextWhenSelected ?? ""
+                            continueButton.setTitle(ctaText, for: .normal)
+                        }else{
+                            continueButton.setTitle("Continue", for: .normal)
+                        }
+                        
                     }
                 })
-                
-                
-            }
+    
             
         }
       
