@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/adaptyteam/AdaptySDK-iOS.git",
       "state" : {
-        "revision" : "95d1c90b5002a376082e69d41c399b39e407d1aa",
-        "version" : "2.11.0"
+        "revision" : "6795a340a0dcdf1ac39d10e26be052f365ec9396",
+        "version" : "3.0.0-beta.2"
       }
     },
     {
@@ -141,7 +141,7 @@
       "location" : "https://github.com/neon-apps/neon-sdk.git",
       "state" : {
         "branch" : "main",
-        "revision" : "528512bed39ed486b9a6e18a9233b64669dbcab9"
+        "revision" : "d30b8243803c1b6efe57264d280916e9880ba81d"
       }
     },
     {

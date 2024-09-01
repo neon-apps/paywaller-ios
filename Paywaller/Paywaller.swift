@@ -58,6 +58,7 @@ public class Paywaller{
             for paywall in PaywallerConstants.paywalls{
                 switch paywall.provider {
                 case .adapty(let paywallPlacementID):
+                    Neon.paywallPresented()
                     if selectedPlacementID == paywallPlacementID{
                         paywall.manager.delegate = delegate ?? (controller as? any PaywallerDelegate)
                         paywall.manager.present(from: controller)
